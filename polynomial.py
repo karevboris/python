@@ -5,13 +5,10 @@ from operator import sub
 
 class Polynomial(object):
     def __init__(self, coeffs):
-        if isinstance(coeffs, list) or isinstance(coeffs, tuple):
-            self.coeffs = coeffs
+        if isinstance(coeffs, Polynomial):
+            self.coeffs = coeffs.coeffs
         else:
-            if isinstance(coeffs, Polynomial):
-                self.coeffs = coeffs.coeffs
-            else:
-                raise ValueError("Incorrect format of values for polynomial coefficients")
+            self.coeffs = coeffs
 
     @property
     def coeffs(self):
@@ -19,16 +16,19 @@ class Polynomial(object):
 
     @coeffs.setter
     def coeffs(self, cff):
-        copy = list(cff)
-        while copy and copy[0] == 0:
-            del copy[0]
-        for c in copy:
-            if not isinstance(c, int):
-                raise ValueError("Incorrect format of values for polynomial coefficients")
-        if not copy:
-            self._coeffs = (0,)
+        if isinstance(cff, list) or isinstance(cff, tuple):
+            copy = list(cff)
+            while copy and copy[0] == 0:
+                del copy[0]
+            for c in copy:
+                if not isinstance(c, int):
+                    raise ValueError("Incorrect format of values for polynomial coefficients")
+            if not copy:
+                self._coeffs = (0,)
+            else:
+                self._coeffs = list(copy)
         else:
-            self._coeffs = list(copy)
+            raise ValueError("Incorrect format of values for polynomial coefficients")
 
     def __repr__(self):
         return 'Polynomial({})'.format(self.coeffs)
