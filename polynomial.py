@@ -1,10 +1,17 @@
 import re
-import itertools
+from operator import add
+from operator import sub
 
 
-class Polynomial:
+class Polynomial(object):
     def __init__(self, coeffs):
-        self.coeffs = coeffs
+        if isinstance(coeffs, list) or isinstance(coeffs, tuple):
+            self.coeffs = coeffs
+        else:
+            if isinstance(coeffs, Polynomial):
+                self.coeffs = coeffs.coeffs
+            else:
+                raise ValueError("Incorrect format of values for polynomial coefficients")
 
     @property
     def coeffs(self):
@@ -55,8 +62,14 @@ class Polynomial:
             return Polynomial(c)
 
         if isinstance(other, Polynomial):
+            if len(self.coeffs) > len(other.coeffs):
+                cff1 = len(other.coeffs)
+                cff2 = list(reversed(self.coeffs))[cff1:]
+            else:
+                cff1 = len(self.coeffs)
+                cff2 = list(reversed(other.coeffs))[cff1:]
             return Polynomial(
-                [x + y for x, y in itertools.zip_longest(reversed(self.coeffs), reversed(other.coeffs), fillvalue=0)][
+                (list(map(add, list(reversed(self.coeffs))[:cff1], list(reversed(other.coeffs))[:cff1])) + cff2)[
                 ::-1])
 
         raise ValueError("Incorrect argument")
@@ -76,8 +89,15 @@ class Polynomial:
             return Polynomial(c)
 
         if isinstance(other, Polynomial):
+            if len(self.coeffs) > len(other.coeffs):
+                cff1 = len(other.coeffs)
+                cff2 = list(reversed(self.coeffs))[cff1:]
+            else:
+                cff1 = len(self.coeffs)
+                cff2 = list(reversed(other.coeffs))[cff1:]
+                cff2 = [i * (-1) for i in cff2]
             return Polynomial(
-                [x - y for x, y in itertools.zip_longest(reversed(self.coeffs), reversed(other.coeffs), fillvalue=0)][
+                (list(map(sub, list(reversed(self.coeffs))[:cff1], list(reversed(other.coeffs))[:cff1])) + cff2)[
                 ::-1])
 
         raise ValueError("Incorrect argument")

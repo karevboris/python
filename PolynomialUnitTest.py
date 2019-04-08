@@ -12,11 +12,17 @@ class PolynomialTestCase(unittest.TestCase):
     def test_init(self):
         self.assertEqual(self.p1.coeffs, [1, 2, 3])
 
-    def test_init_error(self):
+    def test_init_incorrect_coeffs(self):
         self.assertRaises(ValueError, Polynomial, [1, 'efw'])
 
     def test_init_empty(self):
         self.assertEqual(self.p0, Polynomial([]))
+
+    def test_init_copy(self):
+        self.assertEqual(self.p1, Polynomial(self.p1))
+
+    def test_init_incorrect_arg(self):
+        self.assertRaises(ValueError, Polynomial, "123")
 
     def test_repr(self):
         self.assertEqual(self.p1.__repr__(), "Polynomial([1, 2, 3])")
@@ -70,22 +76,22 @@ class PolynomialTestCase(unittest.TestCase):
         self.assertRaises(ValueError, self.p1.__rmul__, "x")
 
     def test_eq(self):
-        self.assertEqual(self.p1==Polynomial([1, 2, 3]), True)
+        self.assertEqual(self.p1 == Polynomial([1, 2, 3]), True)
 
     def test_ne(self):
-        self.assertEqual(self.p1!=Polynomial([1, 2, 0]), True)
+        self.assertEqual(self.p1 != Polynomial([1, 2, 0]), True)
 
     def test_lt(self):
-        self.assertEqual(self.p1<self.p2, True)
+        self.assertEqual(self.p1 < self.p2, True)
 
     def test_le(self):
-        self.assertEqual(self.p1<=self.p2 and self.p1<=self.p1, True)
+        self.assertEqual(self.p1 <= self.p2 and self.p1 <= self.p1, True)
 
     def test_gt(self):
-        self.assertEqual(self.p2>self.p1, True)
+        self.assertEqual(self.p2 > self.p1, True)
 
     def test_ge(self):
-        self.assertEqual(self.p2>=self.p1 and self.p2>=self.p2, True)
+        self.assertEqual(self.p2 >= self.p1 and self.p2 >= self.p2, True)
 
     def test_calc_zero(self):
         self.assertEqual(self.p0.calc(10), 0)
