@@ -24,18 +24,18 @@ class Polynomial(object):
                 if not isinstance(c, int):
                     raise ValueError("Incorrect format of values for polynomial coefficients")
             if not copy:
-                self._coeffs = (0,)
+                self._coeffs = [0,] if isinstance(cff, list) else (0,)
             else:
-                self._coeffs = list(copy)
+                self._coeffs = copy if isinstance(cff, list) else tuple(copy)
         else:
             raise ValueError("Incorrect format of values for polynomial coefficients")
 
     def __repr__(self):
-        return 'Polynomial({})'.format(self.coeffs)
+        return 'Polynomial({})'.format(list(self.coeffs))
 
     def __str__(self):
         res = ''
-        if self.coeffs == (0,) or self.coeffs == [0, ]:
+        if self.coeffs == (0,) or self.coeffs == [0,]:
             return '0'
         for i in range(len(self.coeffs) - 1):
             if (self.coeffs[i] > 0):
@@ -48,12 +48,13 @@ class Polynomial(object):
             else:
                 res += '- '
             res += str(abs(self.coeffs[-1]))
+        res = res.replace(' 1x', ' x')
         if res == '':
             return '0'
         if res[0] == '+':
-            res = res[1:]
+            res = res[2:]
         res = re.sub('x\\^1\\b', 'x', res)
-        return res.replace(' 1x', ' x')
+        return res
 
     def __add__(self, other):
         if isinstance(other, int):
@@ -130,31 +131,52 @@ class Polynomial(object):
         raise ValueError("Incorrect argument")
 
     def __eq__(self, other):
-        return self.coeffs == other.coeffs
+        if isinstance(other, Polynomial):
+            return self.coeffs == other.coeffs
+
+        return False
 
     def __lt__(self, other):
-        if len(self.coeffs) == len(other.coeffs):
-            return self.coeffs < other.coeffs
-        else:
-            return len(self.coeffs) < len(other.coeffs)
+        if isinstance(other, Polynomial):
+            if len(self.coeffs) == len(other.coeffs):
+                return self.coeffs < other.coeffs
+            else:
+                return len(self.coeffs) < len(other.coeffs)
+
+        raise ValueError("Incorrect argument")
 
     def __le__(self, other):
-        return self.__lt__(other) or self.coeffs == other.coeffs
+        if isinstance(other, Polynomial):
+            return self.__lt__(other) or self.coeffs == other.coeffs
+
+        raise ValueError("Incorrect argument")
 
     def __ne__(self, other):
-        return self.coeffs != other.coeffs
+        if isinstance(other, Polynomial):
+            return self.coeffs != other.coeffs
+
+        raise ValueError("Incorrect argument")
 
     def __gt__(self, other):
-        return not self.__le__(other)
+        if isinstance(other, Polynomial):
+            return not self.__le__(other)
+
+        raise ValueError("Incorrect argument")
 
     def __ge__(self, other):
-        return not self.__lt__(other)
+        if isinstance(other, Polynomial):
+            return not self.__lt__(other)
+
+        raise ValueError("Incorrect argument")
 
     def calc(self, value):
-        result = 0
-        for i in range(len(self.coeffs) - 1):
-            result += self.coeffs[i] * pow(value, len(self.coeffs) - i - 1)
-        return result + self.coeffs[-1]
+        if isinstance(value, (int, float, long, complex)):
+            result = 0
+            for i in range(len(self.coeffs) - 1):
+                result += self.coeffs[i] * pow(value, len(self.coeffs) - i - 1)
+            return result + self.coeffs[-1]
+
+        raise ValueError("Incorrect argument")
 
 
 if __name__ == "__main__":

@@ -99,6 +99,27 @@ class PolynomialTestCase(unittest.TestCase):
     def test_calc(self):
         self.assertEqual(self.p1.calc(10), 123)
 
+    def test_eq_false(self):
+        self.assertEqual(self.p1 == "x", False)
+
+    def test_ne_error(self):
+        self.assertRaises(ValueError, self.p1.__ne__, "x")
+
+    def test_lt_error(self):
+        self.assertRaises(ValueError, self.p1.__lt__, "x")
+
+    def test_le_error(self):
+        self.assertRaises(ValueError, self.p1.__le__, "x")
+
+    def test_gt_error(self):
+        self.assertRaises(ValueError, self.p2.__gt__, "x")
+
+    def test_ge_error(self):
+        self.assertRaises(ValueError, self.p2.__ge__, "x")
+
+    def test_calc_error(self):
+        self.assertRaises(ValueError, self.p1.calc, "x")
+
 
 if __name__ == '__main__':
     unittest.main()
