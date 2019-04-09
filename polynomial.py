@@ -170,7 +170,7 @@ class Polynomial(object):
         raise ValueError("Incorrect argument")
 
     def calc(self, value):
-        if isinstance(value, (int, float, long, complex)):
+        if isinstance(value, (int, float, complex)):
             result = 0
             for i in range(len(self.coeffs) - 1):
                 result += self.coeffs[i] * pow(value, len(self.coeffs) - i - 1)
