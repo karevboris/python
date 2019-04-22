@@ -22,13 +22,13 @@ class Polynomial(object):
                 del copy[0]
             for c in copy:
                 if not isinstance(c, int):
-                    raise ValueError("Incorrect format of values for polynomial coefficients")
+                    raise TypeError("Incorrect format of values for polynomial coefficients")
             if not copy:
                 self._coeffs = [0,] if isinstance(cff, list) else (0,)
             else:
                 self._coeffs = copy if isinstance(cff, list) else tuple(copy)
         else:
-            raise ValueError("Incorrect format of values for polynomial coefficients")
+            raise TypeError("Incorrect format of values for polynomial coefficients")
 
     def __repr__(self):
         return 'Polynomial({})'.format(list(self.coeffs))
@@ -53,6 +53,8 @@ class Polynomial(object):
             return '0'
         if res[0] == '+':
             res = res[2:]
+        if res[0] == '-':
+            res = res.replace("- ", "-", 1)
         res = re.sub('x\\^1\\b', 'x', res)
         return res
 
@@ -73,7 +75,7 @@ class Polynomial(object):
                 (list(map(add, list(reversed(self.coeffs))[:cff1], list(reversed(other.coeffs))[:cff1])) + cff2)[
                 ::-1])
 
-        raise ValueError("Incorrect argument")
+        raise TypeError("Incorrect argument")
 
     def __radd__(self, other):
         if isinstance(other, int):
@@ -81,7 +83,7 @@ class Polynomial(object):
             c[-1] += other
             return Polynomial(c)
 
-        raise ValueError("Incorrect argument")
+        raise TypeError("Incorrect argument")
 
     def __sub__(self, other):
         if isinstance(other, int):
@@ -101,7 +103,7 @@ class Polynomial(object):
                 (list(map(sub, list(reversed(self.coeffs))[:cff1], list(reversed(other.coeffs))[:cff1])) + cff2)[
                 ::-1])
 
-        raise ValueError("Incorrect argument")
+        raise TypeError("Incorrect argument")
 
     def __rsub__(self, other):
         if isinstance(other, int):
@@ -109,7 +111,7 @@ class Polynomial(object):
             c[-1] += other
             return Polynomial(c)
 
-        raise ValueError("Incorrect argument")
+        raise TypeError("Incorrect argument")
 
     def __mul__(self, other):
         if isinstance(other, int):
@@ -122,13 +124,13 @@ class Polynomial(object):
                     c[i1 + i2] += c1 * c2
             return Polynomial(c)
 
-        raise ValueError("Incorrect argument")
+        raise TypeError("Incorrect argument")
 
     def __rmul__(self, other):
         if isinstance(other, int):
             return Polynomial([c * other for c in self.coeffs])
 
-        raise ValueError("Incorrect argument")
+        raise TypeError("Incorrect argument")
 
     def __eq__(self, other):
         if isinstance(other, Polynomial):
@@ -143,31 +145,31 @@ class Polynomial(object):
             else:
                 return len(self.coeffs) < len(other.coeffs)
 
-        raise ValueError("Incorrect argument")
+        raise TypeError("Incorrect argument")
 
     def __le__(self, other):
         if isinstance(other, Polynomial):
             return self.__lt__(other) or self.coeffs == other.coeffs
 
-        raise ValueError("Incorrect argument")
+        raise TypeError("Incorrect argument")
 
     def __ne__(self, other):
         if isinstance(other, Polynomial):
             return self.coeffs != other.coeffs
 
-        raise ValueError("Incorrect argument")
+        raise TypeError("Incorrect argument")
 
     def __gt__(self, other):
         if isinstance(other, Polynomial):
             return not self.__le__(other)
 
-        raise ValueError("Incorrect argument")
+        raise TypeError("Incorrect argument")
 
     def __ge__(self, other):
         if isinstance(other, Polynomial):
             return not self.__lt__(other)
 
-        raise ValueError("Incorrect argument")
+        raise TypeError("Incorrect argument")
 
     def calc(self, value):
         if isinstance(value, (int, float, complex)):
@@ -176,18 +178,22 @@ class Polynomial(object):
                 result += self.coeffs[i] * pow(value, len(self.coeffs) - i - 1)
             return result + self.coeffs[-1]
 
-        raise ValueError("Incorrect argument")
+        raise TypeError("Incorrect argument")
 
 
 if __name__ == "__main__":
-    p1 = Polynomial([-10, 2, 3, -1, -5, 1, 0, 0, 0, 0, 0, 0, 0, 1])
-    p2 = Polynomial([1, 2])
-    p4 = Polynomial([1, 2])
+    p1 = Polynomial((9-10, 2, 3, -1, -5, 1, 0, 0, 0, 0, 0, 0, 0, 1))
+    p2 = Polynomial((1, 2))
+    p4 = Polynomial((1, 2))
+
+
+    p1 = Polynomial([-1,-2,-3,0,-4])
 
     print(p1)
     print(p2)
     print(p4)
     print(p2.__repr__())
+    print(p1.__repr__())
     print(-1 * p1)
     print(p2 <= p4)
     print(p2.calc(2))
