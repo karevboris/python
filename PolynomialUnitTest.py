@@ -30,6 +30,9 @@ class PolynomialTestCase(unittest.TestCase):
     def test_str(self):
         self.assertEqual(self.p3.__str__(), "-x^3 + 2x - 5")
 
+    def test_str2(self):
+        self.assertEqual((self.p3 + 5).__str__(), "-x^3 + 2x")
+
     def test_sum_polynoms(self):
         self.assertEqual(self.p1 + self.p2, Polynomial([1, -1, 5, 13]))
 

@@ -48,6 +48,8 @@ class Polynomial(object):
             else:
                 res += '- '
             res += str(abs(self.coeffs[-1]))
+        else:
+            res = res[:-1]
         res = res.replace(' 1x', ' x')
         if res == '':
             return '0'
@@ -187,7 +189,7 @@ if __name__ == "__main__":
     p4 = Polynomial((1, 2))
 
 
-    p1 = Polynomial([-1,-2,-3,0,-4])
+    p1 = Polynomial([-1,-2,0,5,0])
 
     print(p1)
     print(p2)
